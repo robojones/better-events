@@ -1,7 +1,7 @@
 {
   "name": "better-events",
   "version": "1.0.0",
-  "description": "Improved version of the default node.js EventEngine",
+  "description": "Improved version of the Node.js EventEmitter",
   "main": "index.js",
   "scripts": {
     "test": "exit 0"
