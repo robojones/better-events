@@ -47,3 +47,5 @@ class BetterEvents extends EventEngine {
         return this.once(eventName, target.emit.bind(target, eventName));
     }
 }
+
+module.exports = BetterEvents;
