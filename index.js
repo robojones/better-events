@@ -6,8 +6,18 @@ class BetterEvents extends EventEmitter {
     }
 
     once(eventName, listener) {
-        if(listener) {
+        if(typeof listener === 'function') {
             return super.once(eventName, listener);
+        }
+
+        if (listener === true) {
+            //promise mode with array
+
+            return new Promise(resolve => {
+                super.once(eventName, (...args) => {
+                    resolve(args);
+                });
+            });
         }
 
         return new Promise(resolve => {
