@@ -1,13 +1,13 @@
 {
   "name": "better-events",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Improved version of the Node.js EventEmitter",
   "main": "BetterEvents.js",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha"
   },
   "engines": {
-    "node": ">=6.3.1"
+    "node": ">=6.0.0"
   },
   "repository": {
     "type": "git",
