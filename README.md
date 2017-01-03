@@ -31,12 +31,16 @@ It gets resolved when the event is fired.
 - __eventName__ \<String\> | \<Symbol\> name of the event
 - __source__ \<EventEmitter\> another EventEmitter
 
+__returns__ the listener that has been applied to the source so one can use _.removeListener()_.
+
 When the event specified by the __eventName__ gets fired at the __source__ it will also be emitted on this instance.
 
 ### emitter.collectOnce(eventName, source)
 
 - __eventName__ \<String\> | \<Symbol\> name of the event
 - __source__ \<EventEmitter\> another EventEmitter
+
+__returns__ the listener that has been applied to the source so one can use _.removeListener()_.
 
 Similar to _emitter.collect()_ but works only once.
 
@@ -45,11 +49,15 @@ Similar to _emitter.collect()_ but works only once.
 - __eventName__ \<String\> | \<Symbol\> name of the event
 - __target__ \<EventEmitter\> another EventEmitter
 
+__returns__ the listener that has been applied to the source so one can use _.removeListener()_.
+
 When the event specified by the __eventName__ gets fired at this instance it will also be emitted on the __target__.
 
 ### emitter.shareOnce(eventName, target)
 
 - __eventName__ \<String\> | \<Symbol\> name of the event
 - __target__ \<EventEmitter\> another EventEmitter
+
+__returns__ the listener that has been applied to the source so one can use _.removeListener()_.
 
 Similar to _emitter.share()_ but works only once.
