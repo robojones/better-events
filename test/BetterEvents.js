@@ -89,6 +89,14 @@ describe('BetterEvents', function () {
 
     describe('BetterEvents#collect(eventName, source)', function () {
 
+        it('should throw an error if source is not an EventEmitter', function () {
+            try {
+                this.emitter.collect('example', undefined)
+            } catch (err) {
+                assert(err instanceof Error)
+            }
+        })
+
         it('should return a function', function () {
 
             let r = this.emitter.collect('example', this.other)
@@ -127,6 +135,14 @@ describe('BetterEvents', function () {
     })
 
     describe('BetterEvents#collectOnce(eventName, source)', function () {
+
+        it('should throw an error if source is not an EventEmitter', function () {
+            try {
+                this.emitter.collect('example', undefined)
+            } catch (err) {
+                assert(err instanceof Error)
+            }
+        })
 
         it('should return a function', function () {
 
@@ -174,6 +190,14 @@ describe('BetterEvents', function () {
 
     describe('BetterEvents#share(eventName, target)', function () {
 
+        it('should throw an error if target is not an EventEmitter', function () {
+            try {
+                this.emitter.collect('example', undefined)
+            } catch (err) {
+                assert(err instanceof Error)
+            }
+        })
+
         it('should return a function', function () {
 
             let r = this.emitter.collect('example', this.other)
@@ -212,6 +236,14 @@ describe('BetterEvents', function () {
     })
 
     describe('BetterEvents#shareOnce(eventName, target)', function () {
+
+        it('should throw an error if target is not an EventEmitter', function () {
+            try {
+                this.emitter.collect('example', undefined)
+            } catch (err) {
+                assert(err instanceof Error)
+            }
+        })
 
         it('should return a function', function () {
 
