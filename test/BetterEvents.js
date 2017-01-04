@@ -138,7 +138,7 @@ describe('BetterEvents', function () {
 
         it('should throw an error if source is not an EventEmitter', function () {
             try {
-                this.emitter.collect('example', undefined)
+                this.emitter.collectOnce('example', undefined)
             } catch (err) {
                 assert(err instanceof Error)
             }
@@ -192,7 +192,7 @@ describe('BetterEvents', function () {
 
         it('should throw an error if target is not an EventEmitter', function () {
             try {
-                this.emitter.collect('example', undefined)
+                this.emitter.share('example', undefined)
             } catch (err) {
                 assert(err instanceof Error)
             }
@@ -239,7 +239,7 @@ describe('BetterEvents', function () {
 
         it('should throw an error if target is not an EventEmitter', function () {
             try {
-                this.emitter.collect('example', undefined)
+                this.emitter.shareOnce('example', undefined)
             } catch (err) {
                 assert(err instanceof Error)
             }
