@@ -1,6 +1,6 @@
 {
   "name": "better-events",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Improved version of the Node.js EventEmitter",
   "main": "BetterEvents.js",
   "scripts": {
