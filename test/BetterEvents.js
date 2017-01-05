@@ -1,290 +1,244 @@
+const EventEmitter = require('events')
 const BetterEvents = require('./../BetterEvents')
+const once = BetterEvents.once
 
 const assert = require('assert')
 const xTime = require('x-time')
 
 describe('BetterEvents', function () {
 
+    const ARGUMENTS = [1000, "hi", true]
+    const EVENT = 'example'
+
+    describe('BetterEvents.once(source, eventName[, arrayMode])', function () {
+
+        it('should reject the promise if source is no instance of EventEmitter', function () {
+            return once(null, EVENT).catch(() => {
+                return true
+            }).then(err => {
+                assert(err, 'promise resolved')
+            })
+        })
+
+        describe('source instance of EventEmitter', function () {
+
+            beforeEach(function () {
+                this.vanilla = new EventEmitter()
+            })
+
+            describe('arrayMode = false', function () {
+
+                beforeEach(function () {
+                    this.r = once(this.vanilla, EVENT)
+                })
+
+                it('should return a promise', function () {
+                    assert(this.r instanceof Promise)
+                })
+
+                it('should resolve the promise with the first argument of the event', function () {
+                    this.vanilla.emit(EVENT, ...ARGUMENTS)
+                    return this.r.then((v) => {
+                        assert.strictEqual(v, ARGUMENTS[0])
+                    })
+                })
+            })
+
+            describe('arrayMode = true', function () {
+
+                beforeEach(function () {
+                    this.r = once(this.vanilla, EVENT, true)
+                })
+
+                it('should return a promise if arrayMode is active', function () {
+                    assert(this.r instanceof Promise)
+                })
+
+                it('should resolve the promise with the first argument of the event', function () {
+                    this.vanilla.emit(EVENT, ...ARGUMENTS)
+                    return this.r.then((v) => {
+                        assert.deepEqual(v, ARGUMENTS)
+                    })
+                })
+            })
+        })
+
+        describe('source instanceof BetterEvents', function () {
+
+            beforeEach(function () {
+                this.emitter = new BetterEvents()
+            })
+
+            it('should return a promise', function () {
+                let r = once(this.emitter, EVENT)
+                assert(r instanceof Promise)
+            })
+        })
+    })
+
+    describe('emitter#once(eventName[, callback])', function () {
+
+        beforeEach(function () {
+            this.emitter = new BetterEvents()
+        })
+
+        describe('callback instance of function', function () {
+
+            it('should call the callback with the events arguments', function (cb) {
+                this.emitter.once(EVENT, (...v) => {
+                    assert.deepEqual(v, ARGUMENTS)
+                    cb()
+                })
+                this.emitter.emit(EVENT, ...ARGUMENTS)
+            })
+        })
+
+        describe('callback is false', function () {
+
+            beforeEach(function () {
+                this.r = this.emitter.once(EVENT, false)
+            })
+
+            it('should return a promise', function () {
+                assert(this.r instanceof Promise)
+            })
+
+            it('should resolve the promise with the events first argument', function () {
+                this.emitter.emit(EVENT, ...ARGUMENTS)
+                return this.r.then(v => {
+                    assert.strictEqual(v, ARGUMENTS[0])
+                })
+            })
+        })
+
+        describe('callback is true (array mode)', function () {
+
+            beforeEach(function () {
+                this.r = this.emitter.once(EVENT, true)
+            })
+
+            it('should return a promise', function () {
+                assert(this.r instanceof Promise)
+            })
+
+            it('should resolve the promise with the events arguments', function () {
+                this.emitter.emit(EVENT, ...ARGUMENTS)
+                return this.r.then(v => {
+                    assert.deepEqual(v, ARGUMENTS)
+                })
+            })
+        })
+    })
+
     beforeEach(function () {
         this.emitter = new BetterEvents()
         this.other = new BetterEvents()
     })
 
-    describe('BetterEvents#once(eventName)', function () {
+    describe('emitter#collect(eventName, source)', function () {
 
-        it('should return a promise', function () {
-
-            let r = this.emitter.once('example')
-            assert(r instanceof Promise)
-
-        })
-
-        describe('return: promise', function () {
-
-            it('should resolve with the first argument of the event', function () {
-
-                let r = this.emitter.once('example')
-
-                this.emitter.emit('example', 1, 2)
-
-                return r.then(v => {
-                    assert.strictEqual(v, 1)
-                })
-            })
-        })
-    })
-
-    describe('BetterEvents#once(eventName, true)', function () {
-
-        it('should return a promise', function () {
-
-            let r = this.emitter.once('example', true)
-            assert(r instanceof Promise)
-        })
-
-        describe('return: promise', function () {
-            it('should resolve with an array containing all the events arguments', function () {
-
-                let r = this.emitter.once('example', true)
-
-                let arg = [1, 2, 3]
-
-                this.emitter.emit('example', ...arg)
-
-                return r.then(v => {
-                    assert.deepEqual(v, arg)
-                })
-            })
-        })
-    })
-
-    describe('BetterEvents#once(eventName, callback)', function () {
-
-        it('should return itself', function () {
-
-            let r = this.emitter.once('example', function () {})
-
-            assert.strictEqual(r, this.emitter)
-        })
-
-        it('should run the callback with the given arguments', function (cb) {
-
-            let arg = [1, 2, 3]
-
-            let r = this.emitter.once('example', (...v) => {
-
-                try {
-                    assert.deepEqual(v, arg)
-                } catch(err) {
-                    cb(err)
-                    return
-                }
-
-                cb()
-            })
-
-            this.emitter.emit('example', ...arg)
-        })
-    })
-
-    describe('BetterEvents#collect(eventName, source)', function () {
-
-        it('should throw an error if source is not an EventEmitter', function () {
+        it('should throw an error if source ist not an instance of EventEmitter', function () {
             try {
-                this.emitter.collect('example', undefined)
-            } catch (err) {
+                this.emitter.collect(EVENT, null)
+            } catch(err) {
                 assert(err instanceof Error)
             }
         })
 
-        it('should return a function', function () {
-
-            let r = this.emitter.collect('example', this.other)
-
-            assert.strictEqual(typeof r, 'function')
-        })
-
-        it('should emit the same event as the source', function (cb) {
-
-            this.emitter.collect('example', this.other)
-
-            let arg = [1, 2, 3]
-
-            let count = 5
-
-            this.emitter.on('example', (...v) => {
-
-                try {
-                    assert.deepEqual(v, arg)
-                } catch(err) {
-                    cb(err)
-                    return
-                }
-
-                if(count--) {
-                    this.other.emit('example', ...arg)
-
-                    return
-                }
-
-                cb()
-            })
-
-            this.other.emit('example', ...arg)
-        })
-    })
-
-    describe('BetterEvents#collectOnce(eventName, source)', function () {
-
-        it('should throw an error if source is not an EventEmitter', function () {
-            try {
-                this.emitter.collectOnce('example', undefined)
-            } catch (err) {
-                assert(err instanceof Error)
-            }
+        beforeEach(function () {
+            this.r = this.emitter.collect(EVENT, this.other)
+            this.ev = this.emitter.once(EVENT, true)
         })
 
         it('should return a function', function () {
-
-            let r = this.emitter.collect('example', this.other)
-
-            assert.strictEqual(typeof r, 'function')
+            assert.strictEqual(typeof this.r, 'function')
         })
 
-        it('should emit the same event as the source - but only once', function () {
-
-            this.emitter.collectOnce('example', this.other)
-
-            let arg = [1, 2, 3]
-
-            let count = 5
-
-            let r = this.emitter.once('example', true).then(v => {
-
-                let q = []
-
-                assert.deepEqual(v, arg)
-
-                q.push(xTime(10, true))
-
-                q.push(this.emitter.once('example').then(() => {
-                    //this should not happen
-                    console.log('this should never happen')
-                    return false
-                }))
-
-                this.other.emit('example', ...arg)
-
-                return Promise.race(q)
-            })
-
-            this.other.emit('example', ...arg)
-
-            return r.then(success => {
-                if(!success) {
-                    return Promise.reject(new Error('handler runs twice'))
-                }
+        it('should collect the event', function () {
+            this.other.emit(EVENT, ...ARGUMENTS)
+            return this.ev.then(v => {
+                assert.deepEqual(v, ARGUMENTS)
             })
         })
     })
 
-    describe('BetterEvents#share(eventName, target)', function () {
+    describe('emitter#collectOnce(eventName, source)', function () {
 
-        it('should throw an error if target is not an EventEmitter', function () {
+        it('should throw an error if source ist not an instance of EventEmitter', function () {
             try {
-                this.emitter.share('example', undefined)
-            } catch (err) {
+                this.emitter.collectOnce(EVENT, null)
+            } catch(err) {
                 assert(err instanceof Error)
             }
         })
 
-        it('should return a function', function () {
-
-            let r = this.emitter.collect('example', this.other)
-
-            assert.strictEqual(typeof r, 'function')
+        beforeEach(function () {
+            this.r = this.emitter.collectOnce(EVENT, this.other)
+            this.ev = this.emitter.once(EVENT, true)
         })
 
-        it('target emit the same event to the target', function (cb) {
+        it('should return a function', function () {
+            assert.strictEqual(typeof this.r, 'function')
+        })
 
-            this.other.share('example', this.emitter)
-
-            let arg = [1, 2, 3]
-
-            let count = 5
-
-            this.emitter.on('example', (...v) => {
-
-                try {
-                    assert.deepEqual(v, arg)
-                } catch(err) {
-                    cb(err)
-                    return
-                }
-
-                if(count--) {
-                    this.other.emit('example', ...arg)
-
-                    return
-                }
-
-                cb()
+        it('should collect the event', function () {
+            this.other.emit(EVENT, ...ARGUMENTS)
+            return this.ev.then(v => {
+                assert.deepEqual(v, ARGUMENTS)
             })
-
-            this.other.emit('example', ...arg)
         })
     })
 
-    describe('BetterEvents#shareOnce(eventName, target)', function () {
+    describe('emitter#share(eventName, target)', function () {
 
-        it('should throw an error if target is not an EventEmitter', function () {
+        it('should throw an error if target ist not an instance of EventEmitter', function () {
             try {
-                this.emitter.shareOnce('example', undefined)
-            } catch (err) {
+                this.emitter.share(EVENT, null)
+            } catch(err) {
                 assert(err instanceof Error)
             }
         })
 
-        it('should return a function', function () {
-
-            let r = this.other.shareOnce('example', this.emitter)
-
-            assert.strictEqual(typeof r, 'function')
+        beforeEach(function () {
+            this.r = this.emitter.share(EVENT, this.other)
+            this.ev = this.other.once(EVENT, true)
         })
 
-        it('should emit the same event to the target - but only once', function () {
+        it('should return a function', function () {
+            assert.strictEqual(typeof this.r, 'function')
+        })
 
-            this.other.shareOnce('example', this.emitter)
-
-            let arg = [1, 2, 3]
-
-            let count = 5
-
-            let r = this.emitter.once('example', true).then(v => {
-
-                let q = []
-
-                assert.deepEqual(v, arg)
-
-                q.push(xTime(10, true))
-
-                q.push(this.emitter.once('example').then(() => {
-                    //this should not happen
-                    console.log('this should never happen')
-                    return false
-                }))
-
-                this.other.emit('example', ...arg)
-
-                return Promise.race(q)
+        it('should collect the event', function () {
+            this.emitter.emit(EVENT, ...ARGUMENTS)
+            return this.ev.then(v => {
+                assert.deepEqual(v, ARGUMENTS)
             })
+        })
+    })
 
-            this.other.emit('example', ...arg)
+    describe('emitter#shareOnce(eventName, target)', function () {
 
-            return r.then(success => {
-                if(!success) {
-                    return Promise.reject(new Error('handler runs twice'))
-                }
+        it('should throw an error if target ist not an instance of EventEmitter', function () {
+            try {
+                this.emitter.shareOnce(EVENT, null)
+            } catch(err) {
+                assert(err instanceof Error)
+            }
+        })
+
+        beforeEach(function () {
+            this.r = this.emitter.shareOnce(EVENT, this.other)
+            this.ev = this.other.once(EVENT, true)
+        })
+
+        it('should return a function', function () {
+            assert.strictEqual(typeof this.r, 'function')
+        })
+
+        it('should collect the event', function () {
+            this.emitter.emit(EVENT, ...ARGUMENTS)
+            return this.ev.then(v => {
+                assert.deepEqual(v, ARGUMENTS)
             })
         })
     })

@@ -5,6 +5,29 @@ class BetterEvents extends EventEmitter {
         super(...args)
     }
 
+    static once(source, eventName, arrayMode) {
+
+        if(!(source instanceof EventEmitter)) {
+            return Promise.reject(new TypeError('source must be an instance of EventEmitter'))
+        }
+
+        if(source instanceof BetterEvents) {
+            return source.once(eventName, !!arrayMode)
+        }
+
+        if(arrayMode) {
+            return new Promise(resolve => {
+                source.on(eventName, (...args) => {
+                    resolve(args)
+                })
+            })
+        } else {
+            return new Promise(resolve => {
+                source.on(eventName, resolve)
+            })
+        }
+    }
+
     once(eventName, listener) {
         if(typeof listener === 'function') {
             return super.once(eventName, listener)

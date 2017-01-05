@@ -13,6 +13,15 @@ https://nodejs.org/api/events.html
 
 Here are the specs for the new methods of BetterEvents.
 
+### BetterEvents.once(source, eventName[, arrayMode])
+
+- __source__ \<EventEmitter\> another EventEmitter
+- __eventName__ \<String\> | \<Symbol\> name of the event
+- __arrayMode__ \<Boolean\> resolve the promise with an array containing all arguments of the event
+
+__returns__ a \<Promise\> that gets resolved with the first argument of the event.
+It gets resolved when the source emits the event.
+
 ### emitter.once(eventName[, listener])
 
 - __eventName__ \<String\> | \<Symbol\> name of the event
