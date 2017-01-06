@@ -93,7 +93,7 @@ describe('BetterEvents', function () {
             })
         })
 
-        describe('callback is false', function () {
+        describe('callback = false', function () {
 
             beforeEach(function () {
                 this.r = this.emitter.once(EVENT, false)
@@ -111,7 +111,7 @@ describe('BetterEvents', function () {
             })
         })
 
-        describe('callback is true (array mode)', function () {
+        describe('callback = true (array mode)', function () {
 
             beforeEach(function () {
                 this.r = this.emitter.once(EVENT, true)

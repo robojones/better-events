@@ -17,13 +17,13 @@ class BetterEvents extends EventEmitter {
 
         if(arrayMode) {
             return new Promise(resolve => {
-                source.on(eventName, (...args) => {
+                source.once(eventName, (...args) => {
                     resolve(args)
                 })
             })
         } else {
             return new Promise(resolve => {
-                source.on(eventName, resolve)
+                source.once(eventName, resolve)
             })
         }
     }
