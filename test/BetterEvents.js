@@ -50,7 +50,7 @@ describe('BetterEvents', function () {
                     this.r = once(this.vanilla, EVENT, true)
                 })
 
-                it('should return a promise if arrayMode is active', function () {
+                it('should return a promise', function () {
                     assert(this.r instanceof Promise)
                 })
 
@@ -90,6 +90,20 @@ describe('BetterEvents', function () {
                     cb()
                 })
                 this.emitter.emit(EVENT, ...ARGUMENTS)
+            })
+
+            it('should call the callback only once', function (cb) {
+                let e = 1
+
+                this.emitter.once(EVENT, (...v) => {
+                    assert(e --, 'executed twice')
+                })
+
+                this.emitter.once('done', cb)
+
+                this.emitter.emit(EVENT)
+                this.emitter.emit(EVENT)
+                this.emitter.emit('done')
             })
         })
 
