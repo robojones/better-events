@@ -1,10 +1,6 @@
 const EventEmitter = require('events')
 
 class BetterEvents extends EventEmitter {
-    constructor(...args) {
-        super(...args)
-    }
-
     static once(source, eventName, arrayMode) {
 
         if(!(source instanceof EventEmitter)) {
