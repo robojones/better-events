@@ -25,7 +25,7 @@ It gets resolved when the source emits the event.
 ### emitter.once(eventName[, listener])
 
 - __eventName__ \<String\> | \<Symbol\> name of the event
-- __listener__ \<Function\> callback function
+- __listener__ \<Function\> | \<Boolean\> callback function
 
 Like the original method (see: https://nodejs.org/api/events.html#events_emitter_once_eventname_listener) with exceptions.
 
