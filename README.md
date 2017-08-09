@@ -1,5 +1,7 @@
 # BetterEvents - Improved version of the Node.js EventEmitter
 
+[![Build Status](https://travis-ci.org/robojones/better-events.svg?branch=master)](https://travis-ci.org/robojones/better-events)
+
 ## Installation
 
 `npm i better-events`
