@@ -92,4 +92,6 @@ class BetterEvents extends EventEmitter {
   }
 }
 
+BetterEvents.BetterEvents = BetterEvents
+
 module.exports = BetterEvents
