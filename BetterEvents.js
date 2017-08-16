@@ -1,6 +1,12 @@
 const EventEmitter = require('events')
 
 class BetterEvents extends EventEmitter {
+  static verifyEventEmitter(value, name) {
+    if (!(value && value instanceof EventEmitter)) {
+      throw new TypeError(name + ' must be an instance of EventEmitter')
+    }
+  }
+
   static once(source, eventName, arrayMode) {
     if (!(source instanceof EventEmitter)) {
       return Promise.reject(new TypeError('source must be an instance of EventEmitter'))
@@ -44,9 +50,7 @@ class BetterEvents extends EventEmitter {
   }
 
   collect(eventName, source) {
-    if (!(source && source instanceof EventEmitter)) {
-      throw new TypeError('source must be an instance of EventEmitter')
-    }
+    BetterEvents.verifyEventEmitter(source, 'source')
 
     const cb = this.emit.bind(this, eventName)
 
@@ -56,9 +60,7 @@ class BetterEvents extends EventEmitter {
   }
 
   collectOnce(eventName, source) {
-    if (!(source && source instanceof EventEmitter)) {
-      throw new TypeError('source must be an instance of EventEmitter')
-    }
+    BetterEvents.verifyEventEmitter(source, 'source')
 
     const cb = this.emit.bind(this, eventName)
 
@@ -68,9 +70,7 @@ class BetterEvents extends EventEmitter {
   }
 
   share(eventName, target) {
-    if (!(target && target instanceof EventEmitter)) {
-      throw new TypeError('target must be an instance of EventEmitter')
-    }
+    BetterEvents.verifyEventEmitter(target, 'target')
 
     const cb = target.emit.bind(target, eventName)
 
@@ -80,9 +80,7 @@ class BetterEvents extends EventEmitter {
   }
 
   shareOnce(eventName, target) {
-    if (!(target && target instanceof EventEmitter)) {
-      throw new TypeError('target must be an instance of EventEmitter')
-    }
+    BetterEvents.verifyEventEmitter(target, 'target')
 
     const cb = target.emit.bind(target, eventName)
 
