@@ -3,7 +3,7 @@ const { EventEmitter } = require('events')
 /**
  * Class representing better EventEmitter.
  * @class
- * @extends @events
+ * @extends EventEmitter
  */
 class BetterEvents extends EventEmitter {
   /**
