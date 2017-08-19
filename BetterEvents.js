@@ -1,12 +1,29 @@
-const EventEmitter = require('events')
+const { EventEmitter } = require('events')
 
+/**
+ * Class representing better EventEmitter.
+ * @class
+ * @extends @events
+ */
 class BetterEvents extends EventEmitter {
+  /**
+   * Throw if value is not an EventEmitter.
+   * @param {*} value - The value to verify.
+   * @param {string} name  - The name of the variable.
+   */
   static verifyEventEmitter(value, name) {
     if (!(value && value instanceof EventEmitter)) {
       throw new TypeError(name + ' must be an instance of EventEmitter')
     }
   }
 
+  /**
+   * Return a value that gets resolved when the event is emitted by the source.
+   * @param {BetterEvents|EventEmitter} source - The source of the event.
+   * @param {string} eventName - The name of the event.
+   * @param {boolean} [arrayMode] - Convert all arguments of the event into an array.
+   * @returns {Promise.<*>}
+   */
   static once(source, eventName, arrayMode) {
     if (!(source instanceof EventEmitter)) {
       return Promise.reject(new TypeError('source must be an instance of EventEmitter'))
@@ -29,6 +46,12 @@ class BetterEvents extends EventEmitter {
     }
   }
 
+  /**
+   * Listen for an event once.
+   * @param {string} eventName - The name of the event.
+   * @param {boolean|?callback} [listener] - Function that listens for the event.
+   * @returns {?Promise.<*>} - If no callback is provided, a promise gets returned.
+   */
   once(eventName, listener) {
     if (typeof listener === 'function') {
       return super.once(eventName, listener)
@@ -49,6 +72,12 @@ class BetterEvents extends EventEmitter {
     })
   }
 
+  /**
+   * Collect an event from the source.
+   * @param {string} eventName - The name of the event.
+   * @param {BetterEvents|EventEmitter} source - The source of the Event.
+   * @returns {callback} - The callback that has been applied to the source.
+   */
   collect(eventName, source) {
     BetterEvents.verifyEventEmitter(source, 'source')
 
@@ -59,6 +88,12 @@ class BetterEvents extends EventEmitter {
     return cb
   }
 
+  /**
+   * Collect an event from the source once.
+   * @param {string} eventName - The name of the event.
+   * @param {BetterEvents|EventEmitter} source - The source of the Event.
+   * @returns {callback} - The callback that has been applied to the source.
+   */
   collectOnce(eventName, source) {
     BetterEvents.verifyEventEmitter(source, 'source')
 
@@ -69,6 +104,12 @@ class BetterEvents extends EventEmitter {
     return cb
   }
 
+  /**
+   * Share an event an event with the target.
+   * @param {string} eventName - The name of the event.
+   * @param {BetterEvents|EventEmitter} target - The target for the Event.
+   * @returns {callback} - The callback that has been applied to the target.
+   */
   share(eventName, target) {
     BetterEvents.verifyEventEmitter(target, 'target')
 
@@ -79,6 +120,12 @@ class BetterEvents extends EventEmitter {
     return cb
   }
 
+  /**
+   * Share an event an event with the target once.
+   * @param {string} eventName - The name of the event.
+   * @param {BetterEvents|EventEmitter} target - The target for the Event.
+   * @returns {callback} - The callback that has been applied to the target.
+   */
   shareOnce(eventName, target) {
     BetterEvents.verifyEventEmitter(target, 'target')
 
@@ -90,6 +137,15 @@ class BetterEvents extends EventEmitter {
   }
 }
 
+/**
+ * @property {BetterEvents} - Backreference to BetterEvents.
+ */
 BetterEvents.BetterEvents = BetterEvents
 
 module.exports = BetterEvents
+
+/**
+ * A callback for an event.
+ * @typedef {function} callback
+ * @param {*} value - The value of the event.
+ */
