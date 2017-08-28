@@ -7,7 +7,14 @@ Improved version of the Node.js EventEmitter
 
 ## Installation
 
-`npm i better-events`
+```
+npm i better-events --save
+```
+
+## Changes
+
+- v2.0.0
+  - Promises for the "error" event will now be rejected when an error is emitted.
 
 ## Class: BetterEvents
 
@@ -26,6 +33,7 @@ Here are the specs for the new methods of BetterEvents.
 
 __returns__ a \<Promise\> that gets resolved with the first argument of the event.
 It gets resolved when the source emits the event.
+If the eventName is "error" then the promise gets rejected as soon as an error is emitted.
 
 ### emitter.once(eventName[, listener])
 
@@ -35,6 +43,7 @@ It gets resolved when the source emits the event.
 Like the original method (see: https://nodejs.org/api/events.html#events_emitter_once_eventname_listener) with exceptions.
 
 If no callback is provided the method returns a \<Promise\> that resolves with the first argument of the event when the event is fired.
+If the eventName is "error" then the promise gets rejected as soon as an error is emitted.
 
 If one provides `true` instead of the callback the array mode gets activated.
 The method returns a \<Promise\> which resolves with an array containing all the arguments of the event.
