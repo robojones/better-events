@@ -23,6 +23,23 @@ describe('BetterEvents', function () {
         this.vanilla = new EventEmitter()
       })
 
+      describe('eventName = "error"', function () {
+        beforeEach(function () {
+          this.event = once(this.vanilla, 'error')
+        })
+        it('should reject the promise if the event gets emitted', function () {
+          this.vanilla.emit('error', new Error('test'))
+
+          return this.event.then(() => {
+            throw new Error('Promise was not rejected.')
+          }).catch(err => {
+            if (err.message !== 'test') {
+              throw err
+            }
+          })
+        })
+      })
+
       describe('arrayMode = false', function () {
         beforeEach(function () {
           this.r = once(this.vanilla, EVENT)
@@ -96,6 +113,23 @@ describe('BetterEvents', function () {
         this.emitter.emit(EVENT)
         this.emitter.emit(EVENT)
         this.emitter.emit('done')
+      })
+    })
+
+    describe('eventName = "error"', function () {
+      beforeEach(function () {
+        this.event = this.emitter.once('error')
+      })
+      it('should reject the promise if the event gets emitted', function () {
+        this.emitter.emit('error', new Error('test'))
+
+        return this.event.then(() => {
+          throw new Error('Promise was not rejected.')
+        }).catch(err => {
+          if (err.message !== 'test') {
+            throw err
+          }
+        })
       })
     })
 
