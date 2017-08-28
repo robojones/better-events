@@ -24,13 +24,19 @@ class BetterEvents extends EventEmitter {
    * @param {boolean} [arrayMode] - Convert all arguments of the event into an array.
    * @returns {Promise.<*>}
    */
-  static once(source, eventName, arrayMode) {
+  static async once(source, eventName, arrayMode) {
     if (!(source instanceof EventEmitter)) {
-      return Promise.reject(new TypeError('source must be an instance of EventEmitter'))
+      throw new TypeError('source must be an instance of EventEmitter')
     }
 
     if (source instanceof BetterEvents) {
       return source.once(eventName, !!arrayMode)
+    }
+
+    if (eventName === 'error') {
+      return new Promise((resolve, reject) => {
+        source.once('error', reject)
+      })
     }
 
     if (arrayMode) {
@@ -39,11 +45,11 @@ class BetterEvents extends EventEmitter {
           resolve(args)
         })
       })
-    } else {
-      return new Promise(resolve => {
-        source.once(eventName, resolve)
-      })
     }
+
+    return new Promise((resolve) => {
+      source.once(eventName, resolve)
+    })
   }
 
   /**
@@ -55,6 +61,12 @@ class BetterEvents extends EventEmitter {
   once(eventName, listener) {
     if (typeof listener === 'function') {
       return super.once(eventName, listener)
+    }
+
+    if (eventName === 'error') {
+      return new Promise((resolve, reject) => {
+        super.once('error', reject)
+      })
     }
 
     if (listener === true) {
