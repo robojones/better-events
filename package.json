@@ -2,7 +2,7 @@
   "name": "better-events",
   "version": "1.3.7",
   "description": "Improved version of the Node.js EventEmitter",
-  "main": "BetterEvents.js",
+  "main": "index.js",
   "scripts": {
     "test": "istanbul cover _mocha",
     "lint": "node_modules/eslint/bin/eslint.js ."
