@@ -3,7 +3,12 @@ An improved version of the Node.js EventEmitter.
 
 [![Build Status](https://travis-ci.org/robojones/better-events.svg?branch=master)](https://travis-ci.org/robojones/better-events)
 [![Test Coverage](https://codeclimate.com/github/robojones/better-events/badges/coverage.svg)](https://codeclimate.com/github/robojones/better-events/coverage)
-[![Issue Count](https://codeclimate.com/github/robojones/better-events/badges/issue_count.svg)](https://codeclimate.com/github/robojones/better-events)
+
+[![bitHound Code](https://www.bithound.io/github/robojones/better-events/badges/code.svg)](https://www.bithound.io/github/robojones/better-events)
+[![bitHound Overall Score](https://www.bithound.io/github/robojones/better-events/badges/score.svg)](https://www.bithound.io/github/robojones/better-events)
+
+[![bitHound Dependencies](https://www.bithound.io/github/robojones/better-events/badges/dependencies.svg)](https://www.bithound.io/github/robojones/better-events/master/dependencies/npm)
+[![bitHound Dev Dependencies](https://www.bithound.io/github/robojones/better-events/badges/devDependencies.svg)](https://www.bithound.io/github/robojones/better-events/master/dependencies/npm)
 
 ## Installation
 
