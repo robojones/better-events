@@ -3,6 +3,7 @@
   "version": "3.0.1",
   "description": "An improved version of the Node.js EventEmitter.",
   "main": "index.js",
+  "tonicExampleFilename": "example.js",
   "scripts": {
     "test": "istanbul cover _mocha",
     "lint": "node_modules/eslint/bin/eslint.js ."
