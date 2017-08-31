@@ -55,7 +55,7 @@ class BetterEvents extends EventEmitter {
   /**
    * Listen for an event once.
    * @param {string} eventName - The name of the event.
-   * @param {boolean|?callback} [listener] - Function that listens for the event.
+   * @param {true|function} [listener] - Function that listens for the event.
    * @returns {?Promise.<*>} - If no callback is provided, a promise gets returned.
    */
   once(eventName, listener) {
@@ -155,9 +155,3 @@ class BetterEvents extends EventEmitter {
 BetterEvents.BetterEvents = BetterEvents
 
 module.exports = BetterEvents
-
-/**
- * A callback for an event.
- * @typedef {function} callback
- * @param {*} value - The value of the event.
- */
