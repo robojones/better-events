@@ -1,7 +1,7 @@
 const { EventEmitter } = require('events')
 
 /**
-   * Throw if value is not an EventEmitter.
+   * Throws an error if the value is not an EventEmitter.
    * @param {*} value - The value to verify.
    * @param {string} name  - The name of the variable.
    */
@@ -9,6 +9,25 @@ function verifyEventEmitter(value, name) {
   if (!(value && value instanceof EventEmitter)) {
     throw new TypeError(name + ' must be an instance of EventEmitter')
   }
+}
+
+/**
+ * Share an event from the source with the target.
+ * @param {string} eventName - The name of the event.
+ * @param {EventEmitter} source - The EventEmitter that emits the event.
+ * @param {EventEmitter} target - The EventEmitter that should also emit the event.
+ * @param {boolean} [once] - Share the event only once.
+ * @returns {function} - The callback that has been applied to the target.
+ */
+function shareEvent(eventName, source, target, once = false) {
+  verifyEventEmitter(source, 'source')
+  verifyEventEmitter(target, 'target')
+
+  const cb = target.emit.bind(target, eventName)
+
+  source[once ? 'once' : 'on'](eventName, cb)
+
+  return cb
 }
 
 /**
@@ -91,13 +110,7 @@ class BetterEvents extends EventEmitter {
    * @returns {callback} - The callback that has been applied to the source.
    */
   collect(eventName, source) {
-    BetterEvents.verifyEventEmitter(source, 'source')
-
-    const cb = this.emit.bind(this, eventName)
-
-    source.on(eventName, cb)
-
-    return cb
+    return shareEvent(eventName, source, this)
   }
 
   /**
@@ -107,13 +120,7 @@ class BetterEvents extends EventEmitter {
    * @returns {callback} - The callback that has been applied to the source.
    */
   collectOnce(eventName, source) {
-    BetterEvents.verifyEventEmitter(source, 'source')
-
-    const cb = this.emit.bind(this, eventName)
-
-    source.once(eventName, cb)
-
-    return cb
+    return shareEvent(eventName, source, this, true)
   }
 
   /**
@@ -123,13 +130,7 @@ class BetterEvents extends EventEmitter {
    * @returns {callback} - The callback that has been applied to the target.
    */
   share(eventName, target) {
-    BetterEvents.verifyEventEmitter(target, 'target')
-
-    const cb = target.emit.bind(target, eventName)
-
-    this.on(eventName, cb)
-
-    return cb
+    return shareEvent(eventName, this, target)
   }
 
   /**
@@ -139,17 +140,12 @@ class BetterEvents extends EventEmitter {
    * @returns {callback} - The callback that has been applied to the target.
    */
   shareOnce(eventName, target) {
-    BetterEvents.verifyEventEmitter(target, 'target')
-
-    const cb = target.emit.bind(target, eventName)
-
-    this.once(eventName, cb)
-
-    return cb
+    return shareEvent(eventName, this, target, true)
   }
 }
 
 BetterEvents.BetterEvents = BetterEvents
 BetterEvents.verifyEventEmitter = verifyEventEmitter
+BetterEvents.shareEvent = shareEvent
 
 module.exports = BetterEvents
