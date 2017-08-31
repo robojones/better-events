@@ -91,8 +91,9 @@ class BetterEvents extends EventEmitter {
     const cacheProp = '_eventPromises'
     const fn = (resolve, reject) => {
       if (eventName === 'error') {
-        source.once('error', reject)
+        return source.once('error', reject)
       }
+
       source.once(eventName, resolve)
     }
 
