@@ -1,22 +1,22 @@
 const { EventEmitter } = require('events')
 
 /**
+   * Throw if value is not an EventEmitter.
+   * @param {*} value - The value to verify.
+   * @param {string} name  - The name of the variable.
+   */
+function verifyEventEmitter(value, name) {
+  if (!(value && value instanceof EventEmitter)) {
+    throw new TypeError(name + ' must be an instance of EventEmitter')
+  }
+}
+
+/**
  * Class representing better EventEmitter.
  * @class
  * @extends EventEmitter
  */
 class BetterEvents extends EventEmitter {
-  /**
-   * Throw if value is not an EventEmitter.
-   * @param {*} value - The value to verify.
-   * @param {string} name  - The name of the variable.
-   */
-  static verifyEventEmitter(value, name) {
-    if (!(value && value instanceof EventEmitter)) {
-      throw new TypeError(name + ' must be an instance of EventEmitter')
-    }
-  }
-
   /**
    * Return a value that gets resolved when the event is emitted by the source.
    * @param {BetterEvents|EventEmitter} source - The source of the event.
@@ -149,9 +149,7 @@ class BetterEvents extends EventEmitter {
   }
 }
 
-/**
- * @property {BetterEvents} - Backreference to BetterEvents.
- */
 BetterEvents.BetterEvents = BetterEvents
+BetterEvents.verifyEventEmitter = verifyEventEmitter
 
 module.exports = BetterEvents
