@@ -115,57 +115,6 @@ describe('BetterEvents', function () {
         this.emitter.emit('done')
       })
     })
-
-    describe('eventName = "error"', function () {
-      beforeEach(function () {
-        this.event = this.emitter.once('error')
-      })
-      it('should reject the promise if the event gets emitted', function () {
-        this.emitter.emit('error', new Error('test'))
-
-        return this.event.then(() => {
-          throw new Error('Promise was not rejected.')
-        }).catch(err => {
-          if (err.message !== 'test') {
-            throw err
-          }
-        })
-      })
-    })
-
-    describe('callback = false', function () {
-      beforeEach(function () {
-        this.r = this.emitter.once(EVENT, false)
-      })
-
-      it('should return a promise', function () {
-        assert(this.r instanceof Promise)
-      })
-
-      it('should resolve the promise with the events first argument', function () {
-        this.emitter.emit(EVENT, ...ARGUMENTS)
-        return this.r.then(v => {
-          assert.strictEqual(v, ARGUMENTS[0])
-        })
-      })
-    })
-
-    describe('callback = true (array mode)', function () {
-      beforeEach(function () {
-        this.r = this.emitter.once(EVENT, true)
-      })
-
-      it('should return a promise', function () {
-        assert(this.r instanceof Promise)
-      })
-
-      it('should resolve the promise with the events arguments', function () {
-        this.emitter.emit(EVENT, ...ARGUMENTS)
-        return this.r.then(v => {
-          assert.deepEqual(v, ARGUMENTS)
-        })
-      })
-    })
   })
 
   beforeEach(function () {
