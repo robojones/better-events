@@ -37,7 +37,7 @@ function shareEvent(eventName, source, target, once = false) {
  */
 class BetterEvents extends EventEmitter {
   /**
-   * Return a value that gets resolved when the event is emitted by the source.
+   * Return a promise that gets resolved when the event is emitted by the source.
    * @param {BetterEvents|EventEmitter} source - The source of the event.
    * @param {string} eventName - The name of the event.
    * @param {boolean} [arrayMode] - Convert all arguments of the event into an array.
@@ -46,10 +46,6 @@ class BetterEvents extends EventEmitter {
   static async once(source, eventName, arrayMode) {
     if (!(source instanceof EventEmitter)) {
       throw new TypeError('source must be an instance of EventEmitter')
-    }
-
-    if (source instanceof BetterEvents) {
-      return source.once(eventName, !!arrayMode)
     }
 
     if (eventName === 'error') {
@@ -74,33 +70,15 @@ class BetterEvents extends EventEmitter {
   /**
    * Listen for an event once.
    * @param {string} eventName - The name of the event.
-   * @param {true|function} [listener] - Function that listens for the event.
-   * @returns {?Promise.<*>} - If no callback is provided, a promise gets returned.
+   * @param {true|function} [listener] - Function that listens for the event. If set to true, the array-mode will be used and a promise will be returned.
+   * @returns {BetterEvents|Promise.<*>} - If no callback is provided, a promise gets returned.
    */
   once(eventName, listener) {
     if (typeof listener === 'function') {
       return super.once(eventName, listener)
     }
 
-    if (eventName === 'error') {
-      return new Promise((resolve, reject) => {
-        super.once('error', reject)
-      })
-    }
-
-    if (listener === true) {
-      // promise mode with array
-
-      return new Promise(resolve => {
-        super.once(eventName, (...args) => {
-          resolve(args)
-        })
-      })
-    }
-
-    return new Promise(resolve => {
-      super.once(eventName, resolve)
-    })
+    return BetterEvents.once(this, eventName, listener)
   }
 
   /**
