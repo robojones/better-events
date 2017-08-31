@@ -43,12 +43,10 @@ function eventPromiseCache(source, cacheProp, eventName, fn) {
 
   const cache = source[cacheProp]
   if (!cache[eventName]) {
-    console.log('creating new promise')
     cache[eventName] = new Promise((resolve, reject) => {
       function deleteAnd(fn) {
         // delete wrapper
         return result => {
-          console.log(`deleting promise ${eventName} from cache ${cacheProp}`)
           delete cache[eventName]
           fn(result)
         }
