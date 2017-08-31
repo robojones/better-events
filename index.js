@@ -43,9 +43,18 @@ function eventPromiseCache(source, cacheProp, eventName, fn) {
 
   const cache = source[cacheProp]
   if (!cache[eventName]) {
+    console.log('creating new promise')
     cache[eventName] = new Promise((resolve, reject) => {
-      delete cache[eventName]
-      fn(resolve, reject)
+      function deleteAnd(fn) {
+        // delete wrapper
+        return result => {
+          console.log(`deleting promise ${eventName} from cache ${cacheProp}`)
+          delete cache[eventName]
+          fn(result)
+        }
+      }
+
+      fn(deleteAnd(resolve), deleteAnd(reject))
     })
   }
 
@@ -65,9 +74,9 @@ class BetterEvents extends EventEmitter {
    * @param {boolean} [arrayMode] - Convert all arguments of the event into an array.
    * @returns {Promise.<*>}
    */
-  static async once(source, eventName, arrayMode) {
+  static once(source, eventName, arrayMode) {
     if (!(source instanceof EventEmitter)) {
-      throw new TypeError('source must be an instance of EventEmitter')
+      return Promise.reject(new TypeError('source must be an instance of EventEmitter'))
     }
 
     if (arrayMode && eventName !== 'error') {
