@@ -6,9 +6,9 @@ An improved version of the Node.js EventEmitter.
 
 [![bitHound Code](https://www.bithound.io/github/robojones/better-events/badges/code.svg)](https://www.bithound.io/github/robojones/better-events)
 [![bitHound Overall Score](https://www.bithound.io/github/robojones/better-events/badges/score.svg)](https://www.bithound.io/github/robojones/better-events)
-
 [![bitHound Dependencies](https://www.bithound.io/github/robojones/better-events/badges/dependencies.svg)](https://www.bithound.io/github/robojones/better-events/master/dependencies/npm)
 [![bitHound Dev Dependencies](https://www.bithound.io/github/robojones/better-events/badges/devDependencies.svg)](https://www.bithound.io/github/robojones/better-events/master/dependencies/npm)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation
 
