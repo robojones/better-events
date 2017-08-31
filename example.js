@@ -9,10 +9,10 @@ const emitter2 = new BetterEvents()
 
 async function example() {
   // If emitter1 emits "go" it will also be emitted by emitter2.
-  emitter1.share('go', emitter2)
+  shareEvent(emitter1, 'go', emitter2)
 
   // Await the "go" event.
-  await emitter2.once('go')
+  await once(emitter2, 'go')
 
   console.log("received event 'go'")
 }
