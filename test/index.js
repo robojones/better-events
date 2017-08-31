@@ -3,7 +3,6 @@ const BetterEvents = require('..')
 const once = BetterEvents.once
 
 const assert = require('assert')
-const xTime = require('x-time')
 
 describe('BetterEvents', function () {
   const ARGUMENTS = [1000, 'hi', true]
@@ -115,7 +114,7 @@ describe('BetterEvents', function () {
       it('should call the callback only once', function (cb) {
         let e = 1
 
-        this.emitter.once(EVENT, (...v) => {
+        this.emitter.once(EVENT, () => {
           assert(e--, 'executed twice')
         })
 
