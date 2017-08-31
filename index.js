@@ -31,6 +31,28 @@ function shareEvent(eventName, source, target, once = false) {
 }
 
 /**
+ * Cache eventPromises
+ * @param {Object} cache - The cache object.
+ * @param {string} eventName - The name of the event.
+ * @param {function} fn - The inner function for the promise.
+ */
+function eventPromiseCache(source, cacheProp, eventName, fn) {
+  if (!source[cacheProp]) {
+    source[cacheProp] = {}
+  }
+
+  const cache = source[cacheProp]
+  if (!cache[eventName]) {
+    cache[eventName] = new Promise((resolve, reject) => {
+      delete cache[eventName]
+      fn(resolve, reject)
+    })
+  }
+
+  return cache[eventName]
+}
+
+/**
  * Class representing better EventEmitter.
  * @class
  * @extends EventEmitter
@@ -48,23 +70,24 @@ class BetterEvents extends EventEmitter {
       throw new TypeError('source must be an instance of EventEmitter')
     }
 
-    if (eventName === 'error') {
-      return new Promise((resolve, reject) => {
+    if (arrayMode && eventName !== 'error') {
+      const cacheProp = '_arrayEventPromises'
+      const fn = resolve => {
+        source.once(eventName, (...args) => resolve(args))
+      }
+
+      return eventPromiseCache(source, cacheProp, eventName, fn)
+    }
+
+    const cacheProp = '_eventPromises'
+    const fn = (resolve, reject) => {
+      if (eventName === 'error') {
         source.once('error', reject)
-      })
-    }
-
-    if (arrayMode) {
-      return new Promise(resolve => {
-        source.once(eventName, (...args) => {
-          resolve(args)
-        })
-      })
-    }
-
-    return new Promise((resolve) => {
+      }
       source.once(eventName, resolve)
-    })
+    }
+
+    return eventPromiseCache(source, cacheProp, eventName, fn)
   }
 
   /**
