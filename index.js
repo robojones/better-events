@@ -1,63 +1,7 @@
 const { EventEmitter } = require('events')
-
-/**
-   * Throws an error if the value is not an EventEmitter.
-   * @param {*} value - The value to verify.
-   * @param {string} name  - The name of the variable.
-   */
-function verifyEventEmitter(value, name) {
-  if (!(value && value instanceof EventEmitter)) {
-    throw new TypeError(name + ' must be an instance of EventEmitter')
-  }
-}
-
-/**
- * Share an event from the source with the target.
- * @param {string} eventName - The name of the event.
- * @param {EventEmitter} source - The EventEmitter that emits the event.
- * @param {EventEmitter} target - The EventEmitter that should also emit the event.
- * @param {boolean} [once] - Share the event only once.
- * @returns {function} - The callback that has been applied to the target.
- */
-function shareEvent(eventName, source, target, once = false) {
-  verifyEventEmitter(source, 'source')
-  verifyEventEmitter(target, 'target')
-
-  const cb = target.emit.bind(target, eventName)
-
-  source[once ? 'once' : 'on'](eventName, cb)
-
-  return cb
-}
-
-/**
- * Cache eventPromises
- * @param {Object} cache - The cache object.
- * @param {string} eventName - The name of the event.
- * @param {function} fn - The inner function for the promise.
- */
-function eventPromiseCache(source, cacheProp, eventName, fn) {
-  if (!source[cacheProp]) {
-    source[cacheProp] = {}
-  }
-
-  const cache = source[cacheProp]
-  if (!cache[eventName]) {
-    cache[eventName] = new Promise((resolve, reject) => {
-      function deleteAnd(fn) {
-        // delete wrapper
-        return result => {
-          delete cache[eventName]
-          fn(result)
-        }
-      }
-
-      fn(deleteAnd(resolve), deleteAnd(reject))
-    })
-  }
-
-  return cache[eventName]
-}
+const eventPromiseCache = require('./lib/eventPromiseCache')
+const shareEvent = require('./lib/shareEvent')
+const verifyEventEmitter = require('./lib/verifyEventEmitter')
 
 /**
  * Class representing better EventEmitter.
