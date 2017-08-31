@@ -72,6 +72,17 @@ describe('BetterEvents', function () {
             assert.deepEqual(v, ARGUMENTS)
           })
         })
+
+        it('should cache the promise until the event is being emitted', function () {
+          assert.strictEqual(this.r, once(this.vanilla, EVENT, true))
+          this.vanilla.emit(EVENT)
+
+          return this.r.then(() => {
+            // should be removed from the cache
+            console.log(this.vanilla)
+            assert.notStrictEqual(this.r, once(this.vanilla, EVENT, true))
+          })
+        })
       })
     })
 
