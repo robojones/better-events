@@ -1,6 +1,6 @@
 {
   "name": "better-events",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "An improved version of the Node.js EventEmitter.",
   "main": "index.js",
   "tonicExampleFilename": "example.js",
