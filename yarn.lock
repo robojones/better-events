@@ -1314,10 +1314,6 @@ write@^0.2.1:
   dependencies:
     mkdirp "^0.5.1"
 
-x-time@^1.0.3:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/x-time/-/x-time-1.1.1.tgz#4651b02f48e8cf18aa951c1d1535ffa794d1178b"
-
 yallist@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
